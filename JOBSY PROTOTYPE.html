@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOBSY — You're looking for a job. A job's looking for you.</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        jobsy: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            brand: '#FF6B35',
+                            brandHover: '#E85A24',
+                            teal: '#00A896',
+                            navy: '#028090',
+                            dark: '#1E293B'
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Fredoka', 'sans-serif'],
+                        body: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+            user-select: none;
+        }
+        .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+        /* Custom animations */
+        @keyframes tailWag {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(18deg); }
+        }
+        .animate-tail {
+            animation: tailWag 0.35s infinite ease-in-out;
+            transform-origin: bottom left;
+        }
+        @keyframes earTwitch {
+            0%, 100% { transform: rotate(0deg); }
+            20% { transform: rotate(-8deg); }
+            40% { transform: rotate(5deg); }
+        }
+        .animate-ear {
+            animation: earTwitch 2.5s infinite;
+        }
+        @keyframes sniffBob {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(6px) rotate(-3deg); }
+        }
+        .animate-sniff {
+            animation: sniffBob 0.6s infinite ease-in-out;
+        }
+        @keyframes zzzFloat {
+            0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translate(15px, -25px) scale(1.2); }
+        }
+        .animate-zzz-1 { animation: zzzFloat 2.4s infinite ease-out; }
+        .animate-zzz-2 { animation: zzzFloat 2.4s infinite ease-out 0.8s; }
+        .animate-zzz-3 { animation: zzzFloat 2.4s infinite ease-out 1.6s; }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex justify-center min-h-screen items-center p-0 md:p-4">
+
+    <!-- Mobile App Viewport Simulator -->
+    <div id="appContainer" class="w-full max-w-md h-screen md:h-[880px] bg-white md:rounded-3xl shadow-2xl flex flex-col overflow-hidden relative border-0 md:border-4 border-slate-800">
+        
+        <!-- App Header Bar -->
+        <header id="mainHeader" class="bg-white border-b border-slate-100 px-5 py-3.5 flex items-center justify-between z-20 shrink-0">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="navigateTo('home')">
+                <div class="w-9 h-9 rounded-xl bg-jobsy-brand flex items-center justify-center text-white font-heading text-xl shadow-md shadow-amber-200">
+                    🐾
+                </div>
+                <span class="font-heading text-2xl font-bold tracking-wide text-slate-800">JOBSY</span>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <!-- Notifications Button -->
+                <button onclick="navigateTo('notifications')" class="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition">
+                    <i class="fa-solid fa-bell text-lg"></i>
+                    <span id="notifBadge" class="hidden absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white"></span>
+                </button>
+                <!-- Creator Info Button -->
+                <button onclick="navigateTo('creator')" class="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition" title="About JOBSY Team">
+                    <i class="fa-solid fa-circle-info text-lg"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Content View Area -->
+        <main id="contentArea" class="flex-1 overflow-y-auto hide-scrollbar relative bg-slate-50 flex flex-col">
+            <!-- Dynamic screens rendered via JavaScript -->
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav id="bottomNav" class="bg-white border-t border-slate-200 px-4 py-2 flex justify-around items-center z-20 shrink-0">
+            <button onclick="navigateTo('home')" id="nav-home" class="flex flex-col items-center py-1 px-3 text-jobsy-brand font-medium transition">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[11px] font-heading mt-0.5">Home</span>
+            </button>
+            <button onclick="navigateTo('search')" id="nav-search" class="flex flex-col items-center py-1 px-3 text-slate-400 hover:text-jobsy-brand font-medium transition">
+                <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                <span class="text-[11px] font-heading mt-0.5">Search</span>
+            </button>
+            <button onclick="navigateTo('saved')" id="nav-saved" class="flex flex-col items-center py-1 px-3 text-slate-400 hover:text-jobsy-brand font-medium transition relative">
+                <i class="fa-solid fa-heart text-lg"></i>
+                <span class="text-[11px] font-heading mt-0.5">Saved</span>
+                <span id="savedBadge" class="hidden absolute top-0 right-2 w-4 h-4 bg-jobsy-brand text-white text-[9px] font-bold rounded-full flex items-center justify-center">0</span>
+            </button>
+            <button onclick="navigateTo('profile')" id="nav-profile" class="flex flex-col items-center py-1 px-3 text-slate-400 hover:text-jobsy-brand font-medium transition">
+                <i class="fa-solid fa-user text-lg"></i>
+                <span class="text-[11px] font-heading mt-0.5">Profile</span>
+            </button>
+        </nav>
+
+        <!-- Paw Print Footer Button (Triggers Admin / Owner Login Modal) -->
+        <button onclick="openOwnerAuthModal()" class="absolute bottom-16 left-3 w-8 h-8 rounded-full bg-slate-200/70 hover:bg-jobsy-brand hover:text-white text-slate-500 flex items-center justify-center text-xs shadow transition-all z-30 opacity-70 hover:opacity-100" title="Owner Access">
+            🐾
+        </button>
+    </div>
+
+
+    <!-- MODAL: Job Details Modal -->
+    <div id="jobDetailsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white w-full max-w-md max-h-[90vh] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-300">
+            <div id="jobDetailsContent" class="overflow-y-auto p-6 space-y-5 flex-1 hide-scrollbar">
+                <!-- Populated dynamically -->
+            </div>
+            <div id="jobDetailsFooter" class="p-4 bg-slate-50 border-t border-slate-100 flex items-center space-x-3">
+                <button id="modalSaveBtn" onclick="toggleSaveCurrentModalJob()" class="px-4 py-3 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition font-heading font-semibold flex items-center space-x-2">
+                    <i class="fa-regular fa-heart text-red-500"></i>
+                    <span>Save</span>
+                </button>
+                <button id="modalApplyBtn" onclick="openApplyModalForCurrentJob()" class="flex-1 py-3 px-6 bg-jobsy-brand hover:bg-jobsy-brandHover text-white font-heading font-bold rounded-2xl shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-2 text-base">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Apply Now</span>
+                </button>
+                <button onclick="closeJobDetailsModal()" class="p-3 text-slate-400 hover:text-slate-600 rounded-2xl border border-slate-200">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Job Application Form Modal -->
+    <div id="applyFormModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white w-full max-w-md max-h-[92vh] rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-jobsy-50">
+                <div>
+                    <h3 class="font-heading text-lg font-bold text-slate-800" id="applyModalJobTitle">Apply for Position</h3>
+                    <p class="text-xs text-slate-500" id="applyModalCompany">Company Name</p>
+                </div>
+                <button onclick="closeApplyModal()" class="w-8 h-8 rounded-full bg-white text-slate-400 hover:text-slate-600 flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <form id="jobApplicationForm" onsubmit="handleApplicationSubmit(event)" class="overflow-y-auto p-6 space-y-4 flex-1 hide-scrollbar">
+                <p class="text-xs text-amber-800 bg-amber-50 p-3 rounded-xl border border-amber-200 flex items-start space-x-2">
+                    <i class="fa-solid fa-shield-dog text-jobsy-brand text-sm mt-0.5"></i>
+                    <span><strong>Privacy First:</strong> Jobsy submits basic contact and schedule info directly to the verified employer. Never share sensitive passwords or numbers!</span>
+                </p>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Full Name *</label>
+                    <input type="text" id="appFullName" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none" placeholder="e.g. Alex Morgan">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Email *</label>
+                        <input type="email" id="appEmail" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none" placeholder="alex@school.edu">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Phone Number *</label>
+                        <input type="tel" id="appPhone" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none" placeholder="(555) 019-2831">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Availability / Preferred Hours *</label>
+                    <input type="text" id="appAvailability" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none" placeholder="e.g. Weekdays 4 PM - 8 PM, Saturdays">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Why would you be a great fit? (Optional)</label>
+                    <textarea id="appNotes" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none" placeholder="Mention relevant classes, clubs, hobbies, or past work experience..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Transportation Method</label>
+                    <select id="appTransport" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none bg-white">
+                        <option value="Walk / Bike">Walk / Bike</option>
+                        <option value="Parent Drive / Ride">Parent Drive / Ride</option>
+                        <option value="Public Transit / Bus">Public Transit / Bus</option>
+                        <option value="Personal Vehicle">Personal Vehicle</option>
+                    </select>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3 bg-jobsy-brand hover:bg-jobsy-brandHover text-white font-heading font-bold rounded-2xl shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Submit Application to Job</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Application Success Animation -->
+    <div id="applySuccessModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 text-center space-y-4 shadow-2xl">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner animate-bounce">
+                🐶
+            </div>
+            <h3 class="font-heading text-2xl font-bold text-slate-800">Job Delivered It! 🎉</h3>
+            <p class="text-sm text-slate-600">Your application has been safely sent to the employer! Job will keep an eye out for updates.</p>
+            <div class="pt-2">
+                <button onclick="closeApplySuccessModal()" class="w-full py-3 bg-slate-800 text-white font-heading font-semibold rounded-2xl hover:bg-slate-700 transition">
+                    Awesome, Thanks Job!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Owner / Admin Sign-In Modal -->
+    <div id="ownerAuthModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 space-y-5 shadow-2xl border-2 border-slate-800">
+            <div class="text-center">
+                <div class="w-14 h-14 bg-amber-100 text-jobsy-brand rounded-2xl flex items-center justify-center mx-auto text-2xl mb-2 font-heading shadow">
+                    🐾
+                </div>
+                <h3 class="font-heading text-xl font-bold text-slate-800">JOBSY Owner Access</h3>
+                <p class="text-xs text-slate-500 mt-1">Enter your administrator password to continue.</p>
+            </div>
+
+            <form onsubmit="handleOwnerLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Administrator Password</label>
+                    <!-- IMPORTANT: Empty password field as required -->
+                    <input type="password" id="ownerPasswordInput" autocomplete="off" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none" placeholder="Enter owner password">
+                </div>
+
+                <div id="ownerLoginError" class="hidden text-xs text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-200 text-center font-medium">
+                    Incorrect password. Please try again.
+                </div>
+
+                <div class="flex space-x-2">
+                    <button type="button" onclick="closeOwnerAuthModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-heading text-sm font-semibold hover:bg-slate-100 transition">
+                        Back
+                    </button>
+                    <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-heading text-sm font-semibold shadow transition">
+                        Sign In
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        
+        // Gemini API Config
+        const GEMINI_API_KEY = "";
+        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;
+
+        // Prototype Owner Credential
+        const OWNER_PROTOTYPE_PASSWORD = "hello278";
+
+        // Global State
+        let currentUser = {
+            hasCompletedOnboarding: false,
+            name: "Alex",
+            age: 16,
+            locationArea: "Fort Wayne, IN",
+            zipCode: "46802",
+            schoolArea: "Northrop High Area",
+            travelDistance: "5 miles",
+            availability: "After school (4 PM - 8 PM), Weekends",
+            transportation: "Parent Ride / Bike",
+            interests: ["Food & Restaurant", "Animals", "Technology"]
+        };
+
+        let savedJobIds = [101, 103];
+        let appliedJobs = [
+            {
+                jobId: 101,
+                jobTitle: "Cashier & Customer Service",
+                companyName: "Sunny Scoop Ice Cream",
+                appliedDate: "2026-09-28",
+                status: "Submitted to Employer"
+            }
+        ];
+
+        let notifications = [
+            {
+                id: 1,
+                title: "🐶 Job found something!",
+                body: "A new job near Northrop High matches your preferred hours (4 PM - 8 PM).",
+                time: "2 hours ago",
+                unread: true,
+                type: "match"
+            },
+            {
+                id: 2,
+                title: "📢 Official JOBSY Announcement",
+                body: "New local seasonal categories have been added for student workers!",
+                time: "Yesterday",
+                unread: false,
+                type: "system"
+            }
+        ];
+
+        let businesses = [
+            {
+                id: "biz-1",
+                name: "Sunny Scoop Ice Cream",
+                phone: "(260) 555-0142",
+                email: "jobs@sunnyscoop.com",
+                website: "https://sunnyscoop.example.com",
+                address: "1420 W Jefferson Blvd, Fort Wayne, IN",
+                area: "West Jefferson / Parkview",
+                description: "Family-owned artisanal scoop shop serving handcrafted ice cream and frozen treats."
+            },
+            {
+                id: "biz-2",
+                name: "Pawsitive Haven Pet Store",
+                phone: "(260) 555-0199",
+                email: "careers@pawsitivehaven.com",
+                website: "https://pawsitivehaven.example.com",
+                address: "3810 Lima Rd, Fort Wayne, IN",
+                area: "North Lima Road",
+                description: "Local neighborhood pet store supplying organic foods, grooming, and pet supplies."
+            },
+            {
+                id: "biz-3",
+                name: "TechByte Repair Hub",
+                phone: "(260) 555-0822",
+                email: "support@techbytehub.com",
+                website: "https://techbytehub.example.com",
+                address: "4201 Coldwater Rd, Fort Wayne, IN",
+                area: "Glenbrook Area",
+                description: "Electronics repair & retail shop specializing in smartphones, tablets, and gaming gear."
+            },
+            {
+                id: "biz-4",
+                name: "Green Thumb Garden Center",
+                phone: "(260) 555-0311",
+                email: "info@greenthumbfw.com",
+                website: "https://greenthumbfw.example.com",
+                address: "6110 Illinois Rd, Fort Wayne, IN",
+                area: "Southwest Fort Wayne",
+                description: "Sprawling plant nursery and garden center committed to local ecology."
+            }
+        ];
+
+        let jobsDatabase = [
+            {
+                id: 101,
+                title: "Cashier & Scoop Team Member",
+                businessId: "biz-1",
+                businessName: "Sunny Scoop Ice Cream",
+                category: "Food & Restaurant",
+                categoryEmoji: "🍔",
+                distance: "1.8 miles away",
+                pay: "$13 - $15/hr",
+                schedule: "4 PM - 8 PM",
+                days: "Monday - Friday",
+                type: "Part-Time",
+                experience: "No experience required",
+                ageReq: "15+ eligible",
+                matchBadge: "Good Match",
+                matchReason: "Your preferred availability matches this 4 PM - 8 PM shift schedule.",
+                description: "We are looking for energetic cashiers and scoopers to greet guests, operate the POS register, craft delicious cones, and keep the store clean and welcoming!",
+                published: true
+            },
+            {
+                id: 102,
+                title: "Pet Care & Store Assistant",
+                businessId: "biz-2",
+                businessName: "Pawsitive Haven Pet Store",
+                category: "Animals",
+                categoryEmoji: "🐶",
+                distance: "2.4 miles away",
+                pay: "$14 - $16/hr",
+                schedule: "3:30 PM - 7:30 PM",
+                days: "Tue, Thu, Sat",
+                type: "Part-Time",
+                experience: "Must love pets!",
+                ageReq: "16+ eligible",
+                matchBadge: "Great Match",
+                matchReason: "Matches your strong interest in Animals & Pet Care!",
+                description: "Assist customers with pet nutrition questions, restock shelves, feed store hamsters/birds, and ensure the adoption habitat is clean.",
+                published: true
+            },
+            {
+                id: 103,
+                title: "Junior Tech Assistant & Cashier",
+                businessId: "biz-3",
+                businessName: "TechByte Repair Hub",
+                category: "Technology",
+                categoryEmoji: "💻",
+                distance: "3.1 miles away",
+                pay: "$15 - $17/hr",
+                schedule: "4:00 PM - 7:00 PM",
+                days: "Mon, Wed, Fri",
+                type: "Part-Time",
+                experience: "Basic device knowledge helpful",
+                ageReq: "16+ eligible",
+                matchBadge: "Good Match",
+                matchReason: "Fits your travel radius and interest in Technology.",
+                description: "Help test refurbished electronics, assist customers at checking in devices for repairs, and keep inventory organized.",
+                published: true
+            },
+            {
+                id: 104,
+                title: "Plant Care & Customer Helper",
+                businessId: "biz-4",
+                businessName: "Green Thumb Garden Center",
+                category: "Outdoor",
+                categoryEmoji: "🌳",
+                distance: "4.2 miles away",
+                pay: "$13.50 - $15/hr",
+                schedule: "9:00 AM - 2:00 PM",
+                days: "Saturday - Sunday",
+                type: "Weekend Part-Time",
+                experience: "Will train on site",
+                ageReq: "15+ eligible",
+                matchBadge: "Good Match",
+                matchReason: "Perfect weekend hours for student schedules.",
+                description: "Help water outdoor flower beds, load soil bags for customers, and maintain clean plant display aisles in the nursery.",
+                published: true
+            }
+        ];
+
+        let selectedCategoryFilter = "All";
+        let currentSearchQuery = "";
+        let selectedJobForModal = null;
+        let isOwnerAuthenticated = false;
+
+
+        // Render Job SVG dog with smooth custom states: 'sleep', 'happy', 'sniff', 'found', 'alert'
+        function getJobDogSVG(state = 'sleep', size = 'md') {
+            const sizeMap = {
+                sm: 'w-16 h-16',
+                md: 'w-28 h-28',
+                lg: 'w-36 h-36',
+                xl: 'w-48 h-48'
+            };
+            const dimension = sizeMap[size] || sizeMap.md;
+
+            if (state === 'sleep') {
+                return `
+                <div class="relative inline-block ${dimension}">
+                    <!-- Zzz Floating Elements -->
+                    <div class="absolute -top-2 right-2 text-jobsy-brand font-heading font-bold text-xs animate-zzz-1">Z</div>
+                    <div class="absolute -top-5 right-6 text-jobsy-brand font-heading font-bold text-sm animate-zzz-2">z</div>
+                    <div class="absolute -top-8 right-10 text-jobsy-brand font-heading font-bold text-base animate-zzz-3">z</div>
+                    
+                    <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-md">
+                        <!-- Dog Sleeping Body -->
+                        <path d="M 25,80 C 20,60 40,40 70,40 C 95,40 105,60 100,80 C 95,95 30,95 25,80 Z" fill="#D97706" />
+                        <path d="M 30,75 C 35,50 65,45 85,55 C 95,70 80,90 30,75 Z" fill="#F59E0B" />
+                        <!-- Tail Curled -->
+                        <path d="M 95,75 C 110,70 115,85 100,88" fill="none" stroke="#D97706" stroke-width="8" stroke-linecap="round" />
+                        <!-- Blue Collar & J Tag -->
+                        <path d="M 35,70 Q 42,75 48,70" fill="none" stroke="#028090" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="41" cy="76" r="4" fill="#FCD34D" />
+                        <text x="41" y="78.5" font-family="Fredoka" font-size="5" font-weight="bold" fill="#B45309" text-anchor="middle">J</text>
+                        <!-- Sleeping Head Resting on Paws -->
+                        <ellipse cx="38" cy="72" rx="16" ry="12" fill="#F59E0B" />
+                        <!-- Ear Drooped -->
+                        <path d="M 26,62 C 20,68 22,80 28,78 C 30,72 28,64 26,62 Z" fill="#B45309" />
+                        <!-- Closed Sleeping Eye (Zzz) -->
+                        <path d="M 32,71 Q 35,74 38,71" fill="none" stroke="#78350F" stroke-width="2" stroke-linecap="round" />
+                        <ellipse cx="28" cy="75" rx="3" ry="2" fill="#78350F" />
+                    </svg>
+                </div>`;
+            }
+
+            if (state === 'sniff') {
+                return `
+                <div class="relative inline-block ${dimension} animate-sniff">
+                    <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-md">
+                        <!-- Wagging Tail -->
+                        <path d="M 85,60 C 105,45 110,30 105,20" fill="none" stroke="#D97706" stroke-width="8" stroke-linecap="round" class="animate-tail"/>
+                        <!-- Body Standing -->
+                        <ellipse cx="65" cy="65" rx="28" ry="20" fill="#F59E0B" />
+                        <!-- Legs Walking -->
+                        <rect x="45" y="75" width="7" height="22" rx="3" fill="#D97706"/>
+                        <rect x="58" y="75" width="7" height="20" rx="3" fill="#B45309"/>
+                        <rect x="75" y="75" width="7" height="22" rx="3" fill="#D97706"/>
+                        <rect x="85" y="75" width="7" height="20" rx="3" fill="#B45309"/>
+                        <!-- Blue Collar with J Tag -->
+                        <path d="M 40,55 L 44,65" stroke="#028090" stroke-width="6" stroke-linecap="round"/>
+                        <circle cx="40" cy="65" r="4.5" fill="#FCD34D" />
+                        <text x="40" y="67.5" font-family="Fredoka" font-size="6" font-weight="bold" fill="#B45309" text-anchor="middle">J</text>
+                        <!-- Head Sniffing Low -->
+                        <ellipse cx="32" cy="70" rx="14" ry="11" fill="#F59E0B" />
+                        <!-- Ear Twitching -->
+                        <path d="M 38,58 C 45,45 52,50 44,62 Z" fill="#B45309" class="animate-ear" />
+                        <!-- Big Black Nose Sniffing Soil -->
+                        <ellipse cx="20" cy="74" rx="4" ry="3" fill="#1E293B" />
+                        <circle cx="30" cy="68" r="2" fill="#1E293B" />
+                    </svg>
+                </div>`;
+            }
+
+            if (state === 'found' || state === 'happy') {
+                return `
+                <div class="relative inline-block ${dimension}">
+                    <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-md">
+                        <!-- Tail Wagging Fast -->
+                        <path d="M 82,65 C 105,45 115,25 105,15" fill="none" stroke="#D97706" stroke-width="9" stroke-linecap="round" class="animate-tail"/>
+                        <!-- Body Sitting Up Proud -->
+                        <ellipse cx="60" cy="70" rx="24" ry="24" fill="#F59E0B" />
+                        <!-- Paws In Front -->
+                        <ellipse cx="48" cy="90" rx="7" ry="5" fill="#D97706" />
+                        <ellipse cx="72" cy="90" rx="7" ry="5" fill="#D97706" />
+                        <!-- Blue Collar & J Tag -->
+                        <path d="M 46,50 Q 60,56 74,50" fill="none" stroke="#028090" stroke-width="6" stroke-linecap="round"/>
+                        <circle cx="60" cy="57" r="5" fill="#FCD34D" />
+                        <text x="60" y="60" font-family="Fredoka" font-size="7" font-weight="bold" fill="#B45309" text-anchor="middle">J</text>
+                        <!-- Happy Head -->
+                        <circle cx="60" cy="38" r="18" fill="#F59E0B" />
+                        <!-- Floppy Ears Happy -->
+                        <path d="M 44,30 C 30,25 25,42 38,44 Z" fill="#B45309" class="animate-ear"/>
+                        <path d="M 76,30 C 90,25 95,42 82,44 Z" fill="#B45309" />
+                        <!-- Big Happy Eyes -->
+                        <circle cx="53" cy="36" r="3" fill="#1E293B" />
+                        <circle cx="67" cy="36" r="3" fill="#1E293B" />
+                        <circle cx="54" cy="35" r="1" fill="#FFFFFF" />
+                        <circle cx="68" cy="35" r="1" fill="#FFFFFF" />
+                        <!-- Dog Nose and Open Tongue Mouth -->
+                        <ellipse cx="60" cy="42" rx="3.5" ry="2.5" fill="#1E293B" />
+                        <path d="M 57,45 Q 60,52 63,45" fill="#EF4444" stroke="#B45309" stroke-width="1"/>
+                    </svg>
+                </div>`;
+            }
+
+            // Default Alert Standing
+            return `
+            <div class="relative inline-block ${dimension}">
+                <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-md">
+                    <path d="M 80,60 C 98,50 105,40 100,30" fill="none" stroke="#D97706" stroke-width="7" stroke-linecap="round"/>
+                    <ellipse cx="60" cy="65" rx="25" ry="20" fill="#F59E0B" />
+                    <path d="M 46,50 Q 60,55 74,50" fill="none" stroke="#028090" stroke-width="6" stroke-linecap="round"/>
+                    <circle cx="60" cy="56" r="5" fill="#FCD34D" />
+                    <text x="60" y="59" font-family="Fredoka" font-size="6" font-weight="bold" fill="#B45309" text-anchor="middle">J</text>
+                    <circle cx="60" cy="36" r="17" fill="#F59E0B" />
+                    <circle cx="53" cy="34" r="2.5" fill="#1E293B" />
+                    <circle cx="67" cy="34" r="2.5" fill="#1E293B" />
+                    <ellipse cx="60" cy="40" rx="3" ry="2" fill="#1E293B" />
+                </svg>
+            </div>`;
+        }
+
+
+        function navigateTo(screen, param = null) {
+            const content = document.getElementById('contentArea');
+            updateNavHighlights(screen);
+
+            if (!currentUser.hasCompletedOnboarding && screen !== 'onboarding') {
+                renderOnboardingScreen();
+                return;
+            }
+
+            switch(screen) {
+                case 'onboarding':
+                    renderOnboardingScreen();
+                    break;
+                case 'home':
+                    renderHomeScreen();
+                    break;
+                case 'search':
+                    renderSearchScreen(param);
+                    break;
+                case 'sniffing':
+                    renderSniffingSearchAnimation(param);
+                    break;
+                case 'saved':
+                    renderSavedJobsScreen();
+                    break;
+                case 'profile':
+                    renderProfileScreen();
+                    break;
+                case 'notifications':
+                    renderNotificationsScreen();
+                    break;
+                case 'creator':
+                    renderCreatorProfileScreen();
+                    break;
+                case 'ownerControlRoom':
+                    renderOwnerControlRoomScreen();
+                    break;
+                default:
+                    renderHomeScreen();
+            }
+        }
+
+        function updateNavHighlights(activeScreen) {
+            const tabs = ['home', 'search', 'saved', 'profile'];
+            tabs.forEach(tab => {
+                const btn = document.getElementById(`nav-${tab}`);
+                if (btn) {
+                    if (tab === activeScreen) {
+                        btn.className = "flex flex-col items-center py-1 px-3 text-jobsy-brand font-medium transition";
+                    } else {
+                        btn.className = "flex flex-col items-center py-1 px-3 text-slate-400 hover:text-jobsy-brand font-medium transition";
+                    }
+                }
+            });
+            updateSavedBadge();
+            updateNotifBadge();
+        }
+
+        function updateSavedBadge() {
+            const badge = document.getElementById('savedBadge');
+            if (badge) {
+                if (savedJobIds.length > 0) {
+                    badge.innerText = savedJobIds.length;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+
+        function updateNotifBadge() {
+            const badge = document.getElementById('notifBadge');
+            if (badge) {
+                const unreadCount = notifications.filter(n => n.unread).length;
+                if (unreadCount > 0) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+
+
+        function renderOnboardingScreen() {
+            const content = document.getElementById('contentArea');
+            content.innerHTML = `
+            <div class="flex-1 flex flex-col items-center justify-between p-6 text-center bg-gradient-to-b from-amber-50 to-orange-50">
+                <div class="pt-4 space-y-2">
+                    <div class="inline-flex items-center space-x-2 bg-white px-4 py-1.5 rounded-full shadow-sm border border-amber-200">
+                        <span class="text-xl">🐶</span>
+                        <span class="font-heading font-bold text-slate-800 text-sm">Welcome to JOBSY</span>
+                    </div>
+                    <h1 class="font-heading text-3xl font-bold text-slate-900 leading-tight">
+                        You're looking for a job.<br/><span class="text-jobsy-brand">A job's looking for you.</span>
+                    </h1>
+                </div>
+
+                <div class="py-6 flex flex-col items-center">
+                    ${getJobDogSVG('found', 'xl')}
+                    <div class="mt-4 bg-white p-4 rounded-2xl shadow-md border border-amber-100 relative max-w-xs">
+                        <div class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-t border-l border-amber-100"></div>
+                        <p class="font-heading text-base font-semibold text-slate-800">“Hey! I'm Job.”</p>
+                        <p class="text-xs text-slate-600 mt-1">I sniff out great job opportunities near your school or neighborhood and bring them right to you!</p>
+                    </div>
+                </div>
+
+                <!-- Job Categories Preview -->
+                <div class="w-full space-y-3">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Explore Opportunities In</p>
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <span class="px-3 py-1.5 rounded-xl bg-white shadow-sm border border-amber-100 text-xs font-semibold text-slate-700">🍔 Food & Restaurant</span>
+                        <span class="px-3 py-1.5 rounded-xl bg-white shadow-sm border border-amber-100 text-xs font-semibold text-slate-700">🛍️ Retail</span>
+                        <span class="px-3 py-1.5 rounded-xl bg-white shadow-sm border border-amber-100 text-xs font-semibold text-slate-700">🐶 Animals</span>
+                        <span class="px-3 py-1.5 rounded-xl bg-white shadow-sm border border-amber-100 text-xs font-semibold text-slate-700">💻 Technology</span>
+                        <span class="px-3 py-1.5 rounded-xl bg-white shadow-sm border border-amber-100 text-xs font-semibold text-slate-700">🌳 Outdoor</span>
+                    </div>
+
+                    <button onclick="renderSetupPreferencesStep()" class="w-full py-4 bg-jobsy-brand hover:bg-jobsy-brandHover text-white font-heading font-bold text-lg rounded-2xl shadow-lg shadow-amber-500/25 transition transform active:scale-95">
+                        Get Started <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>`;
+        }
+
+        function renderSetupPreferencesStep() {
+            const content = document.getElementById('contentArea');
+            content.innerHTML = `
+            <div class="flex-1 p-6 space-y-6 overflow-y-auto hide-scrollbar bg-white">
+                <div class="space-y-1">
+                    <span class="text-xs font-bold uppercase tracking-wider text-jobsy-brand">Step 1 of 2 • Safety & Preferences</span>
+                    <h2 class="font-heading text-2xl font-bold text-slate-800">Help Job know what to look for</h2>
+                    <p class="text-xs text-slate-500">We keep your exact location private. No street address required!</p>
+                </div>
+
+                <form onsubmit="handleOnboardingSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Your First Name</label>
+                        <input type="text" id="onboardName" required value="${currentUser.name}" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Age / Eligibility</label>
+                            <input type="number" id="onboardAge" min="14" max="99" required value="${currentUser.age}" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">General ZIP Code</label>
+                            <input type="text" id="onboardZip" required value="${currentUser.zipCode}" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">School / Search Area</label>
+                        <select id="onboardSchool" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-jobsy-brand focus:outline-none bg-white">
+                            <option value="Northrop High Area">🏫 Near Northrop High Area</option>
+                            <option value="Snider High Area">🏫 Near Snider High Area</option>
+                            <option value="South Side Area">🏫 Near South Side Area</option>
+                            <option value="Downtown / Central">📍 Downtown Area</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">How far can you travel?</label>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button type="button" onclick="setTravelOption('2 miles', this)" class="travel-btn py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-jobsy-brand">2 mi</button>
+                            <button type="button" onclick="setTravelOption('5 miles', this)" class="travel-btn py-2.5 rounded-xl border-2 border-jobsy-brand bg-amber-50 text-xs font-bold text-jobsy-brand">5 mi</button>
+                            <button type="button" onclick="setTravelOption('10 miles', this)" class="travel-btn py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-jobsy-brand">10 mi</button>
+                            <button type="button" onclick="setTravelOption('15+ miles', this)" class="travel-btn py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-jobsy-brand">15+ mi</button>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" class="w-full py-4 bg-jobsy-brand hover:bg-jobsy-brandHover text-white font-heading font-bold rounded-2xl shadow-lg transition">
+                            Save & Meet Job <i class="fa-solid fa-check ml-1"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>`;
+        }
+
+        function setTravelOption(dist, btn) {
+            currentUser.travelDistance = dist;
+            document.querySelectorAll('.travel-btn').forEach(b => {
+                b.className = "travel-btn py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:border-jobsy-brand";
+            });
+            btn.className = "travel-btn py-2.5 rounded-xl border-2 border-jobsy-brand bg-amber-50 text-xs font-bold text-jobsy-brand";
+        }
+
+        function handleOnboardingSubmit(e) {
+            e.preventDefault();
+            currentUser.name = document.getElementById('onboardName').value || "Alex";
+            currentUser.age = parseInt(document.getElementById('onboardAge').value) || 16;
+            currentUser.zipCode = document.getElementById('onboardZip').value || "46802";
+            currentUser.schoolArea = document.getElementById('onboardSchool').value || "Northrop High Area";
+            currentUser.hasCompletedOnboarding = true;
+
+            navigateTo('home');
+        }
+
+
+        function renderHomeScreen() {
+            const content = document.getElementById('contentArea');
+            content.innerHTML = `
+            <div class="flex-1 p-5 space-y-5 overflow-y-auto hide-scrollbar">
+                <!-- Top Location Banner -->
+                <div class="bg-amber-100/60 p-3.5 rounded-2xl flex items-center justify-between border border-amber-200/80">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-location-dot text-jobsy-brand"></i>
+                        <div>
+                            <p class="text-[10px] font-bold text-amber-900 uppercase tracking-wider">Search Area</p>
+                            <p class="text-xs font-bold text-slate-800">${currentUser.schoolArea} (${currentUser.travelDistance})</p>
+                        </div>
+                    </div>
+                    <button onclick="navigateTo('profile')" class="text-xs font-heading font-bold text-jobsy-brand hover:underline">
+                        Change
+                    </button>
+                </div>
+
+                <!-- Search Input Bar -->
+                <div class="relative">
+                    <form onsubmit="handleHomeSearchSubmit(event)">
+                        <input type="text" id="homeSearchInput" placeholder="🔎 What job are you looking for?" class="w-full pl-11 pr-24 py-3.5 rounded-2xl border border-slate-200 bg-white text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-jobsy-brand">
+                        <button type="submit" class="absolute right-2 top-2 px-4 py-1.5 bg-jobsy-brand text-white font-heading font-bold text-xs rounded-xl shadow hover:bg-jobsy-brandHover transition">
+                            Search
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Job Categories Grid -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-heading font-bold text-slate-800 text-sm">Job Categories</h3>
+                        <span class="text-[11px] text-slate-400">Tap to awaken Job</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button onclick="startCategorySearch('Food & Restaurant')" class="p-3 bg-white hover:bg-amber-50 rounded-2xl border border-slate-200/80 shadow-sm text-left flex items-center space-x-3 transition transform active:scale-95">
+                            <span class="text-2xl">🍔</span>
+                            <div>
+                                <p class="font-heading font-bold text-xs text-slate-800">Food & Restaurant</p>
+                                <p class="text-[10px] text-slate-400">Cashier, Scooper, Host</p>
+                            </div>
+                        </button>
+
+                        <button onclick="startCategorySearch('Retail')" class="p-3 bg-white hover:bg-amber-50 rounded-2xl border border-slate-200/80 shadow-sm text-left flex items-center space-x-3 transition transform active:scale-95">
+                            <span class="text-2xl">🛍️</span>
+                            <div>
+                                <p class="font-heading font-bold text-xs text-slate-800">Retail</p>
+                                <p class="text-[10px] text-slate-400">Store Associate, Stocker</p>
+                            </div>
+                        </button>
+
+                        <button onclick="startCategorySearch('Animals')" class="p-3 bg-white hover:bg-amber-50 rounded-2xl border border-slate-200/80 shadow-sm text-left flex items-center space-x-3 transition transform active:scale-95">
+                            <span class="text-2xl">🐶</span>
+                            <div>
+                                <p class="font-heading font-bold text-xs text-slate-800">Animals</p>
+                                <p class="text-[10px] text-slate-400">Pet Store, Care Assistant</p>
+                            </div>
+                        </button>
+
+                        <button onclick="startCategorySearch('Outdoor')" class="p-3 bg-white hover:bg-amber-50 rounded-2xl border border-slate-200/80 shadow-sm text-left flex items-center space-x-3 transition transform active:scale-95">
+                            <span class="text-2xl">🌳</span>
+                            <div>
+                                <p class="font-heading font-bold text-xs text-slate-800">Outdoor</p>
+                                <p class="text-[10px] text-slate-400">Nursery, Lawn & Garden</p>
+                            </div>
+                        </button>
+
+                        <button onclick="startCategorySearch('Technology')" class="p-3 bg-white hover:bg-amber-50 rounded-2xl border border-slate-200/80 shadow-sm text-left flex items-center space-x-3 transition transform active:scale-95">
+                            <span class="text-2xl">💻</span>
+                            <div>
+                                <p class="font-heading font-bold text-xs text-slate-800">Technology</p>
+                                <p class="text-[10px] text-slate-400">Tech Repair, Admin</p>
+                            </div>
+                        </button>
+
+                        <button onclick="startCategorySearch('All')" class="p-3 bg-white hover:bg-amber-50 rounded-2xl border border-slate-200/80 shadow-sm text-left flex items-center space-x-3 transition transform active:scale-95">
+                            <span class="text-2xl">📦</span>
+                            <div>
+                                <p class="font-heading font-bold text-xs text-slate-800">All Jobs</p>
+                                <p class="text-[10px] text-slate-400">View everything nearby</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sleeping Job Mascot Card -->
+                <div class="bg-gradient-to-br from-amber-500/10 via-orange-50 to-amber-100/50 p-5 rounded-3xl border border-amber-200 text-center relative space-y-2 overflow-hidden shadow-sm">
+                    <div id="homeJobMascotContainer">
+                        ${getJobDogSVG('sleep', 'lg')}
+                    </div>
+                    <h4 class="font-heading font-bold text-slate-800 text-base">Job is currently sleeping... Zzz</h4>
+                    <p class="text-xs text-slate-600 max-w-xs mx-auto">
+                        Tap any category above or type a keyword. Job will wake up, ear twitch, and start sniffing out matches!
+                    </p>
+                </div>
+            </div>`;
+        }
+
+        function handleHomeSearchSubmit(e) {
+            e.preventDefault();
+            const val = document.getElementById('homeSearchInput').value.trim();
+            if (val) {
+                currentSearchQuery = val;
+                selectedCategoryFilter = "All";
+                navigateTo('sniffing', { query: val });
+            }
+        }
+
+        function startCategorySearch(category) {
+            selectedCategoryFilter = category;
+            currentSearchQuery = "";
+            navigateTo('sniffing', { category: category });
+        }
+
+
+        function renderSniffingSearchAnimation(searchParams) {
+            const content = document.getElementById('contentArea');
+            const targetText = searchParams?.category ? `category: ${searchParams.category}` : `"${searchParams?.query || 'jobs'}"`;
+
+            content.innerHTML = `
+            <div class="flex-1 flex flex-col items-center justify-between p-6 text-center bg-gradient-to-b from-amber-50 via-white to-orange-50">
+                <!-- Status Header -->
+                <div class="pt-4 space-y-1">
+                    <span class="text-xs font-bold text-jobsy-brand uppercase tracking-wider">Searching Nearby</span>
+                    <h2 id="sniffingTitle" class="font-heading text-2xl font-bold text-slate-800">
+                        Job woke up! 🐶
+                    </h2>
+                    <p class="text-xs text-slate-500">Searching for ${targetText} within ${currentUser.travelDistance}</p>
+                </div>
+
+                <!-- Animated Dog & Paw Trail -->
+                <div class="my-auto space-y-4 flex flex-col items-center">
+                    <div id="sniffDogMascot">
+                        ${getJobDogSVG('sniff', 'xl')}
+                    </div>
+
+                    <!-- Animated Paw Prints Trail -->
+                    <div class="flex space-x-3 text-slate-400 text-sm py-2">
+                        <span class="animate-bounce" style="animation-delay: 0.1s">🐾</span>
+                        <span class="animate-bounce" style="animation-delay: 0.3s">🐾</span>
+                        <span class="animate-bounce" style="animation-delay: 0.5s">🐾</span>
+                        <span class="animate-bounce" style="animation-delay: 0.7s">🐾</span>
+                        <span class="animate-bounce" style="animation-delay: 0.9s">🐾</span>
+                    </div>
+
+                    <div class="bg-white px-5 py-3 rounded-2xl shadow-sm border border-amber-200">
+                        <p id="sniffStatusMessage" class="font-heading text-sm font-semibold text-jobsy-brand animate-pulse">
+                            Job is sniffing nearby area...
+                        </p>
+                    </div>
+                </div>
+
+                <div class="w-full pb-4">
+                    <p class="text-[11px] text-slate-400">Matching shifts against your preferences...</p>
+                </div>
+            </div>`;
+
+            // Sequence of sniffing status messages
+            const messages = [
+                "Checking available jobs...",
+                "Checking your preferences...",
+                "Checking shift schedules...",
+                "Finding matches..."
+            ];
+
+            let index = 0;
+            const interval = setInterval(() => {
+                index++;
+                const statusEl = document.getElementById('sniffStatusMessage');
+                if (statusEl && index < messages.length) {
+                    statusEl.innerText = messages[index];
+                }
+            }, 700);
+
+            // Complete search after 3.2 seconds
+            setTimeout(() => {
+                clearInterval(interval);
+                renderFoundJobsTransition(searchParams);
+            }, 3000);
+        }
+
+        function renderFoundJobsTransition(searchParams) {
+            const content = document.getElementById('contentArea');
+            
+            // Filter results
+            const results = getFilteredJobs();
+
+            content.innerHTML = `
+            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center bg-amber-50 space-y-4 animate-in fade-in duration-300">
+                ${getJobDogSVG('found', 'xl')}
+                <div class="space-y-1">
+                    <h2 class="font-heading text-2xl font-bold text-slate-900">🐶 “I found some jobs looking for you!”</h2>
+                    <p class="text-sm font-semibold text-jobsy-brand">${results.length} jobs matched your search criteria.</p>
+                </div>
+                <button onclick="navigateTo('search')" class="mt-4 px-8 py-3.5 bg-jobsy-brand text-white font-heading font-bold text-base rounded-2xl shadow-lg hover:bg-jobsy-brandHover transition">
+                    View Matches <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>`;
+        }
+
+
+        function getFilteredJobs() {
+            return jobsDatabase.filter(job => {
+                if (!job.published) return false;
+
+                const matchCategory = (selectedCategoryFilter === 'All' || !selectedCategoryFilter) ? true : (job.category === selectedCategoryFilter);
+                
+                let matchQuery = true;
+                if (currentSearchQuery) {
+                    const q = currentSearchQuery.toLowerCase();
+                    matchQuery = job.title.toLowerCase().includes(q) || 
+                                 job.businessName.toLowerCase().includes(q) || 
+                                 job.category.toLowerCase().includes(q) ||
+                                 job.description.toLowerCase().includes(q);
+                }
+                return matchCategory && matchQuery;
+            });
+        }
+
+        function renderSearchScreen(params) {
+            if (params?.category) selectedCategoryFilter = params.category;
+            if (params?.query) currentSearchQuery = params.query;
+
+            const content = document.getElementById('contentArea');
+            const filteredJobs = getFilteredJobs();
+
+            content.innerHTML = `
+            <div class="flex-1 p-5 space-y-4 overflow-y-auto hide-scrollbar">
+                <!-- Search & Category Filters Header -->
+                <div class="space-y-3">
+                    <div class="relative">
+                        <input type="text" id="resultsSearchInput" value="${currentSearchQuery}" placeholder="Search position or keyword..." class="w-full pl-10 pr-20 py-3 rounded-2xl border border-slate-200 text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-jobsy-brand" oninput="handleSearchInputChange(this.value)">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        ${currentSearchQuery ? `<button onclick="clearSearchQuery()" class="absolute right-3 top-3 text-xs text-slate-400 hover:text-slate-600">Clear</button>` : ''}
+                    </div>
+
+                    <!-- Category Pills -->
+                    <div class="flex space-x-2 overflow-x-auto hide-scrollbar py-1">
+                        ${renderCategoryPill('All', '📦 All')}
+                        ${renderCategoryPill('Food & Restaurant', '🍔 Food')}
+                        ${renderCategoryPill('Retail', '🛍️ Retail')}
+                        ${renderCategoryPill('Animals', '🐶 Animals')}
+                        ${renderCategoryPill('Outdoor', '🌳 Outdoor')}
+                        ${renderCategoryPill('Technology', '💻 Tech')}
+                    </div>
+                </div>
+
+                <!-- Match Results Header -->
+                <div class="flex items-center justify-between pt-1">
+                    <h3 class="font-heading font-bold text-slate-800 text-sm">
+                        ${filteredJobs.length} Matches Found
+                    </h3>
+                    <span class="text-[11px] text-slate-500">Sorted by Job Match</span>
+                </div>
+
+                <!-- Job Cards List -->
+                <div class="space-y-3">
+                    ${filteredJobs.length === 0 ? `
+                        <div class="bg-white p-8 rounded-3xl text-center space-y-3 border border-slate-200">
+                            <span class="text-4xl">🐶</span>
+                            <h4 class="font-heading font-bold text-slate-800">No matches found for "${currentSearchQuery || selectedCategoryFilter}"</h4>
+                            <p class="text-xs text-slate-500">Try broadening your search keywords or switching categories.</p>
+                            <button onclick="resetSearchFilters()" class="px-4 py-2 bg-jobsy-brand text-white text-xs font-heading font-bold rounded-xl">
+                                Reset Filters
+                            </button>
+                        </div>
+                    ` : filteredJobs.map(job => renderJobCardHTML(job)).join('')}
+                </div>
+            </div>`;
+        }
+
+        function renderCategoryPill(category, label) {
+            const isSelected = selectedCategoryFilter === category;
+            const activeClass = "bg-jobsy-brand text-white font-bold shadow-sm";
+            const inactiveClass = "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50";
+            return `
+            <button onclick="selectFilterCategory('${category}')" class="px-3.5 py-1.5 rounded-full text-xs shrink-0 font-heading transition ${isSelected ? activeClass : inactiveClass}">
+                ${label}
+            </button>`;
+        }
+
+        function selectFilterCategory(cat) {
+            selectedCategoryFilter = cat;
+            renderSearchScreen();
+        }
+
+        function handleSearchInputChange(val) {
+            currentSearchQuery = val;
+            renderSearchScreen();
+        }
+
+        function clearSearchQuery() {
+            currentSearchQuery = "";
+            renderSearchScreen();
+        }
+
+        function resetSearchFilters() {
+            selectedCategoryFilter = "All";
+            currentSearchQuery = "";
+            renderSearchScreen();
+        }
+
+        function renderJobCardHTML(job) {
+            const isSaved = savedJobIds.includes(job.id);
+
+            return `
+            <div class="bg-white p-4 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md transition space-y-3 relative">
+                <div class="flex items-start justify-between">
+                    <div class="space-y-1">
+                        <span class="inline-block px-2.5 py-0.5 rounded-full bg-amber-50 text-jobsy-brand font-heading font-bold text-[10px]">
+                            ${job.categoryEmoji} ${job.category}
+                        </span>
+                        <h4 class="font-heading font-bold text-slate-800 text-base leading-snug">${job.title}</h4>
+                        <p class="text-xs font-semibold text-slate-600">${job.businessName}</p>
+                    </div>
+
+                    <button onclick="toggleSaveJob(${job.id}, event)" class="p-2 text-slate-400 hover:text-red-500 transition">
+                        <i class="${isSaved ? 'fa-solid text-red-500' : 'fa-regular'} fa-heart text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Match Reason Pill -->
+                <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-2xl flex items-start space-x-2">
+                    <span class="text-xs">🐾</span>
+                    <div>
+                        <span class="text-[11px] font-bold text-emerald-800">${job.matchBadge}:</span>
+                        <span class="text-[11px] text-emerald-700">${job.matchReason}</span>
+                    </div>
+                </div>
+
+                <!-- Key Details Pill Grid -->
+                <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-2xl">
+                    <div><i class="fa-solid fa-location-dot text-slate-400 w-4"></i> ${job.distance}</div>
+                    <div><i class="fa-solid fa-dollar-sign text-slate-400 w-4"></i> ${job.pay}</div>
+                    <div><i class="fa-solid fa-clock text-slate-400 w-4"></i> ${job.schedule}</div>
+                    <div><i class="fa-solid fa-calendar text-slate-400 w-4"></i> ${job.days}</div>
+                </div>
+
+                <div class="pt-1 flex items-center space-x-2">
+                    <button onclick="openJobDetailsModal(${job.id})" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-heading font-bold text-xs rounded-xl transition text-center">
+                        View Job Details
+                    </button>
+                    <button onclick="openApplyModalForJob(${job.id})" class="py-2.5 px-4 bg-jobsy-brand hover:bg-jobsy-brandHover text-white font-heading font-bold text-xs rounded-xl shadow transition">
+                        Apply
+                    </button>
+                </div>
+            </div>`;
+        }
+
+
+        function openJobDetailsModal(jobId) {
+            const job = jobsDatabase.find(j => j.id === jobId);
+            if (!job) return;
+
+            selectedJobForModal = job;
+            const biz = businesses.find(b => b.id === job.businessId) || {};
+            const modal = document.getElementById('jobDetailsModal');
+            const detailsContent = document.getElementById('jobDetailsContent');
+
+            const isSaved = savedJobIds.includes(job.id);
+
+            detailsContent.innerHTML = `
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-heading font-bold text-xs">
+                        ${job.categoryEmoji} ${job.category}
+                    </span>
+                    <h2 class="font-heading text-2xl font-bold text-slate-800 mt-2">${job.title}</h2>
+                    <p class="text-sm font-bold text-jobsy-brand">${job.businessName}</p>
+                </div>
+
+                <!-- Match Explanation Banner -->
+                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl flex items-start space-x-2.5">
+                    <span class="text-base">🐾</span>
+                    <div>
+                        <p class="text-xs font-bold text-emerald-800">${job.matchBadge}</p>
+                        <p class="text-xs text-emerald-700">${job.matchReason}</p>
+                    </div>
+                </div>
+
+                <!-- Listing Overview Cards -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Pay Rate</p>
+                        <p class="text-sm font-bold text-slate-800">${job.pay}</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Shift Hours</p>
+                        <p class="text-sm font-bold text-slate-800">${job.schedule}</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Days</p>
+                        <p class="text-sm font-bold text-slate-800">${job.days}</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Eligibility</p>
+                        <p class="text-sm font-bold text-slate-800">${job.ageReq}</p>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="space-y-1">
+                    <h4 class="font-heading font-bold text-slate-800 text-sm">Job Description</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">${job.description}</p>
+                </div>
+
+                <!-- Business Verified Profile Information -->
+                <div class="bg-slate-100 p-4 rounded-2xl space-y-2 border border-slate-200">
+                    <h4 class="font-heading font-bold text-slate-800 text-xs flex items-center space-x-1">
+                        <i class="fa-solid fa-shield-halved text-jobsy-brand"></i>
+                        <span>Verified Employer Information</span>
+                    </h4>
+                    <p class="text-xs text-slate-700"><strong>Address:</strong> ${biz.address || 'Fort Wayne, IN'}</p>
+                    <p class="text-xs text-slate-700"><strong>Phone:</strong> ${biz.phone || '(260) 555-0100'}</p>
+                    <p class="text-xs text-slate-700"><strong>Email:</strong> ${biz.email || 'contact@business.com'}</p>
+                    ${biz.website ? `<p class="text-xs text-jobsy-brand underline"><a href="${biz.website}" target="_blank">${biz.website}</a></p>` : ''}
+                </div>
+            </div>`;
+
+            // Update Save button icon
+            const saveBtn = document.getElementById('modalSaveBtn');
+            saveBtn.innerHTML = `
+                <i class="${isSaved ? 'fa-solid text-red-500' : 'fa-regular'} fa-heart"></i>
+                <span>${isSaved ? 'Saved' : 'Save'}</span>`;
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeJobDetailsModal() {
+            document.getElementById('jobDetailsModal').classList.add('hidden');
+        }
+
+        function toggleSaveCurrentModalJob() {
+            if (selectedJobForModal) {
+                toggleSaveJob(selectedJobForModal.id);
+                openJobDetailsModal(selectedJobForModal.id);
+            }
+        }
+
+        function openApplyModalForCurrentJob() {
+            if (selectedJobForModal) {
+                closeJobDetailsModal();
+                openApplyModalForJob(selectedJobForModal.id);
+            }
+        }
+
+        function openApplyModalForJob(jobId) {
+            const job = jobsDatabase.find(j => j.id === jobId);
+            if (!job) return;
+
+            selectedJobForModal = job;
+            document.getElementById('applyModalJobTitle').innerText = job.title;
+            document.getElementById('applyModalCompany').innerText = job.businessName;
+
+            // Pre-fill profile
+            document.getElementById('appFullName').value = currentUser.name || "";
+            document.getElementById('appAvailability').value = currentUser.availability || "";
+
+            document.getElementById('applyFormModal').classList.remove('hidden');
+        }
+
+        function closeApplyModal() {
+            document.getElementById('applyFormModal').classList.add('hidden');
+        }
+
+        function handleApplicationSubmit(e) {
+            e.preventDefault();
+            
+            const newApp = {
+                jobId: selectedJobForModal.id,
+                jobTitle: selectedJobForModal.title,
+                companyName: selectedJobForModal.businessName,
+                appliedDate: new Date().toISOString().split('T')[0],
+                status: "Submitted to Employer",
+                applicantName: document.getElementById('appFullName').value,
+                applicantEmail: document.getElementById('appEmail').value,
+                applicantPhone: document.getElementById('appPhone').value,
+                applicantNotes: document.getElementById('appNotes').value
+            };
+
+            appliedJobs.unshift(newApp);
+            closeApplyModal();
+
+            // Show celebratory dog modal
+            document.getElementById('applySuccessModal').classList.remove('hidden');
+        }
+
+        function closeApplySuccessModal() {
+            document.getElementById('applySuccessModal').classList.add('hidden');
+            navigateTo('profile');
+        }
+
+        function toggleSaveJob(jobId, event) {
+            if (event) event.stopPropagation();
+
+            const idx = savedJobIds.indexOf(jobId);
+            if (idx > -1) {
+                savedJobIds.splice(idx, 1);
+            } else {
+                savedJobIds.push(jobId);
+            }
+            updateSavedBadge();
+            
+            // Re-render current view if on search or saved screen
+            const content = document.getElementById('contentArea');
+            if (content.querySelector('#savedJobsContainer')) {
+                renderSavedJobsScreen();
+            } else if (content.querySelector('#resultsSearchInput')) {
+                renderSearchScreen();
+            }
+        }
+
+
+        function renderSavedJobsScreen() {
+            const content = document.getElementById('contentArea');
+            const savedJobsList = jobsDatabase.filter(j => savedJobIds.includes(j.id));
+
+            content.innerHTML = `
+            <div id="savedJobsContainer" class="flex-1 p-5 space-y-4 overflow-y-auto hide-scrollbar">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="font-heading text-xl font-bold text-slate-800">Saved Jobs</h2>
+                        <p class="text-xs text-slate-500">${savedJobsList.length} saved opportunities</p>
+                    </div>
+                    <span class="text-2xl">❤️</span>
+                </div>
+
+                <div class="space-y-3">
+                    ${savedJobsList.length === 0 ? `
+                        <div class="bg-white p-8 rounded-3xl text-center space-y-3 border border-slate-200">
+                            <span class="text-4xl">🐶</span>
+                            <h4 class="font-heading font-bold text-slate-800">No saved jobs yet</h4>
+                            <p class="text-xs text-slate-500">Tap the heart icon on any job card to save it for later!</p>
+                            <button onclick="navigateTo('search')" class="px-5 py-2.5 bg-jobsy-brand text-white font-heading font-bold text-xs rounded-xl shadow">
+                                Browse Available Jobs
+                            </button>
+                        </div>
+                    ` : savedJobsList.map(job => renderJobCardHTML(job)).join('')}
+                </div>
+            </div>`;
+        }
+
+        function renderNotificationsScreen() {
+            const content = document.getElementById('contentArea');
+
+            content.innerHTML = `
+            <div class="flex-1 p-5 space-y-4 overflow-y-auto hide-scrollbar">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="font-heading text-xl font-bold text-slate-800">Notifications</h2>
+                        <p class="text-xs text-slate-500">Updates from Job & verified employers</p>
+                    </div>
+                    <button onclick="clearAllNotifications()" class="text-xs font-heading text-slate-500 hover:text-red-500">
+                        Clear All
+                    </button>
+                </div>
+
+                <div class="space-y-2">
+                    ${notifications.length === 0 ? `
+                        <div class="bg-white p-8 rounded-3xl text-center text-slate-400">
+                            <i class="fa-regular fa-bell text-3xl mb-2"></i>
+                            <p class="text-xs font-semibold">All caught up! No notifications.</p>
+                        </div>
+                    ` : notifications.map(n => `
+                        <div class="p-4 rounded-2xl bg-white border ${n.unread ? 'border-amber-300 bg-amber-50/50' : 'border-slate-200'} space-y-1 relative">
+                            <div class="flex items-center justify-between">
+                                <span class="font-heading font-bold text-xs text-slate-800">${n.title}</span>
+                                <span class="text-[10px] text-slate-400">${n.time}</span>
+                            </div>
+                            <p class="text-xs text-slate-600">${n.body}</p>
+                            <button onclick="dismissNotification(${n.id})" class="absolute top-2 right-2 text-slate-300 hover:text-slate-500 text-xs p-1">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+            
+            // Mark all read
+            notifications.forEach(n => n.unread = false);
+            updateNotifBadge();
+        }
+
+        function dismissNotification(id) {
+            notifications = notifications.filter(n => n.id !== id);
+            renderNotificationsScreen();
+        }
+
+        function clearAllNotifications() {
+            notifications = [];
+            renderNotificationsScreen();
+        }
+
+
+        function renderProfileScreen() {
+            const content = document.getElementById('contentArea');
+
+            content.innerHTML = `
+            <div class="flex-1 p-5 space-y-5 overflow-y-auto hide-scrollbar">
+                <!-- Profile Header -->
+                <div class="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-sm flex items-center space-x-4">
+                    <div class="w-14 h-14 bg-amber-100 text-amber-800 rounded-2xl flex items-center justify-center font-heading font-bold text-2xl shadow-inner">
+                        ${currentUser.name ? currentUser.name[0] : 'A'}
+                    </div>
+                    <div>
+                        <h2 class="font-heading text-lg font-bold text-slate-800">${currentUser.name}</h2>
+                        <p class="text-xs text-slate-500">${currentUser.schoolArea} • Age ${currentUser.age}</p>
+                        <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                            Verified Youth Profile
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Submitted Applications Section -->
+                <div class="bg-white p-5 rounded-3xl border border-slate-200 space-y-3">
+                    <h3 class="font-heading font-bold text-slate-800 text-sm flex items-center justify-between">
+                        <span>My Submitted Applications (${appliedJobs.length})</span>
+                        <i class="fa-solid fa-paper-plane text-jobsy-brand text-xs"></i>
+                    </h3>
+                    
+                    <div class="space-y-2">
+                        ${appliedJobs.length === 0 ? `
+                            <p class="text-xs text-slate-400">No applications submitted yet.</p>
+                        ` : appliedJobs.map(app => `
+                            <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between text-xs">
+                                <div>
+                                    <p class="font-bold text-slate-800">${app.jobTitle}</p>
+                                    <p class="text-slate-500 text-[11px]">${app.companyName} • ${app.appliedDate}</p>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 font-bold text-[10px]">
+                                    ${app.status}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Account Settings & Preferences Form -->
+                <div class="bg-white p-5 rounded-3xl border border-slate-200 space-y-4">
+                    <h3 class="font-heading font-bold text-slate-800 text-sm">Search & Safety Preferences</h3>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Search Area / School</label>
+                            <input type="text" id="profSchool" value="${currentUser.schoolArea}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Max Travel Distance</label>
+                            <input type="text" id="profTravel" value="${currentUser.travelDistance}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Availability Notes</label>
+                            <input type="text" id="profAvailability" value="${currentUser.availability}" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+                        </div>
+                    </div>
+
+                    <button onclick="saveProfilePreferences()" class="w-full py-2.5 bg-slate-800 text-white font-heading font-bold text-xs rounded-xl hover:bg-slate-900 transition">
+                        Update Preferences
+                    </button>
+                </div>
+            </div>`;
+        }
+
+        function saveProfilePreferences() {
+            currentUser.schoolArea = document.getElementById('profSchool').value;
+            currentUser.travelDistance = document.getElementById('profTravel').value;
+            currentUser.availability = document.getElementById('profAvailability').value;
+            
+            alert("Preferences updated!");
+            renderProfileScreen();
+        }
+
+        function renderCreatorProfileScreen() {
+            const content = document.getElementById('contentArea');
+            content.innerHTML = `
+            <div class="flex-1 p-5 space-y-4 overflow-y-auto hide-scrollbar bg-slate-50">
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 text-center space-y-3">
+                    <div class="w-16 h-16 bg-jobsy-brand text-white rounded-2xl flex items-center justify-center font-heading text-3xl mx-auto shadow-lg shadow-amber-500/20">
+                        🐾
+                    </div>
+                    <h2 class="font-heading text-2xl font-bold text-slate-900">Official JOBSY Profile</h2>
+                    <p class="text-xs text-slate-500">Connecting young job seekers with safe, verified opportunities.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border border-slate-200 space-y-3">
+                    <h3 class="font-heading font-bold text-slate-800 text-sm">About JOBSY Platform</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        JOBSY is designed specifically around youth privacy and simplicity. Our mascot, Job, continuously scans neighborhood businesses for youth-friendly hours, appropriate labor laws, and fair pay.
+                    </p>
+                    <div class="pt-2 text-xs text-slate-600 space-y-1">
+                        <p><strong>Official Contact:</strong> support@jobsyapp.org</p>
+                        <p><strong>Business Desk:</strong> (260) 555-JOBS</p>
+                        <p><strong>Website:</strong> www.jobsyapp.org</p>
+                        <p><strong>Location:</strong> Fort Wayne, Indiana</p>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-center">
+                    <p class="text-xs font-heading font-bold text-amber-900">“You're looking for a job. A job's looking for you.”</p>
+                </div>
+            </div>`;
+        }
+
+
+        function openOwnerAuthModal() {
+            document.getElementById('ownerPasswordInput').value = ""; // Empty password requirement
+            document.getElementById('ownerLoginError').classList.add('hidden');
+            document.getElementById('ownerAuthModal').classList.remove('hidden');
+        }
+
+        function closeOwnerAuthModal() {
+            document.getElementById('ownerAuthModal').classList.add('hidden');
+        }
+
+        function handleOwnerLoginSubmit(e) {
+            e.preventDefault();
+            const typedPassword = document.getElementById('ownerPasswordInput').value;
+
+            // Prototype credential check: hello278
+            if (typedPassword === OWNER_PROTOTYPE_PASSWORD) {
+                isOwnerAuthenticated = true;
+                closeOwnerAuthModal();
+                navigateTo('ownerControlRoom');
+            } else {
+                document.getElementById('ownerLoginError').classList.remove('hidden');
+            }
+        }
+
+        function renderOwnerControlRoomScreen() {
+            if (!isOwnerAuthenticated) {
+                openOwnerAuthModal();
+                return;
+            }
+
+            const content = document.getElementById('contentArea');
+            content.innerHTML = `
+            <div class="flex-1 p-5 space-y-4 overflow-y-auto hide-scrollbar bg-slate-900 text-white">
+                <!-- Owner Control Room Banner -->
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <div>
+                        <span class="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Admin Control</span>
+                        <h2 class="font-heading text-xl font-bold text-white flex items-center space-x-2">
+                            <span>🐾 Owner Control Room</span>
+                        </h2>
+                    </div>
+                    <button onclick="isOwnerAuthenticated=false; navigateTo('home')" class="px-3 py-1.5 bg-slate-800 text-slate-300 hover:text-white rounded-xl text-xs font-semibold">
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Admin Action Tabs -->
+                <div class="flex space-x-2 border-b border-slate-800 pb-2 overflow-x-auto hide-scrollbar text-xs">
+                    <button onclick="switchAdminSubtab('jobs')" id="adminTab-jobs" class="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-bold">Jobs (${jobsDatabase.length})</button>
+                    <button onclick="switchAdminSubtab('ai')" id="adminTab-ai" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-bold flex items-center space-x-1">
+                        <span>🤖 AI Assistant</span>
+                    </button>
+                    <button onclick="switchAdminSubtab('businesses')" id="adminTab-businesses" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-bold">Businesses (${businesses.length})</button>
+                    <button onclick="switchAdminSubtab('apps')" id="adminTab-apps" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-bold">Applications (${appliedJobs.length})</button>
+                </div>
+
+                <!-- Admin Subtab Content View Container -->
+                <div id="adminSubtabView" class="space-y-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>`;
+
+            switchAdminSubtab('jobs');
+        }
+
+        function switchAdminSubtab(subtab) {
+            const tabs = ['jobs', 'ai', 'businesses', 'apps'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`adminTab-${t}`);
+                if (btn) {
+                    if (t === subtab) {
+                        btn.className = "px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-bold";
+                    } else {
+                        btn.className = "px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-bold";
+                    }
+                }
+            });
+
+            const view = document.getElementById('adminSubtabView');
+            if (!view) return;
+
+            if (subtab === 'jobs') {
+                view.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <h3 class="font-heading font-bold text-sm text-slate-200">Active Job Listings</h3>
+                    <button onclick="renderAddJobForm()" class="px-3 py-1.5 bg-jobsy-brand text-white rounded-xl text-xs font-bold">
+                        + Add Job
+                    </button>
+                </div>
+                <div id="adminJobList" class="space-y-2">
+                    ${jobsDatabase.map(j => `
+                        <div class="p-3 bg-slate-800 rounded-2xl border border-slate-700 space-y-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-sm text-amber-400">${j.title}</p>
+                                    <p class="text-xs text-slate-400">${j.businessName} • ${j.pay}</p>
+                                </div>
+                                <span class="px-2 py-0.5 text-[10px] rounded ${j.published ? 'bg-emerald-900/60 text-emerald-300' : 'bg-red-900/60 text-red-300'}">
+                                    ${j.published ? 'Published' : 'Draft'}
+                                </span>
+                            </div>
+                            <div class="pt-2 flex justify-end space-x-2 text-xs">
+                                <button onclick="togglePublishJob(${j.id})" class="px-2.5 py-1 bg-slate-700 text-slate-200 rounded-lg">
+                                    ${j.published ? 'Unpublish' : 'Publish'}
+                                </button>
+                                <button onclick="deleteJobAdmin(${j.id})" class="px-2.5 py-1 bg-red-900/40 text-red-300 rounded-lg">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
+
+            if (subtab === 'ai') {
+                view.innerHTML = `
+                <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 space-y-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl">🤖</span>
+                        <div>
+                            <h4 class="font-heading font-bold text-amber-400 text-sm">AI Job Generator Assistant</h4>
+                            <p class="text-[11px] text-slate-400">Type messy employer notes below. Gemini will format it into a structured job draft!</p>
+                        </div>
+                    </div>
+
+                    <textarea id="aiPromptInput" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500" placeholder="e.g. Sunny Scoop needs a part-time cashier from 4 PM to 8 PM on weekdays. Pay is 14 an hour, no experience needed."></textarea>
+
+                    <button onclick="generateJobWithAI()" id="aiGenerateBtn" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-bold text-xs rounded-xl shadow transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Generate Formated Listing with Gemini AI</span>
+                    </button>
+                </div>
+                
+                <div id="aiOutputContainer" class="hidden bg-slate-800 p-4 rounded-2xl border border-amber-500/50 space-y-3">
+                    <h4 class="font-heading font-bold text-xs text-amber-400">AI Generated Draft (Review Before Publishing)</h4>
+                    <div id="aiOutputContent" class="text-xs text-slate-300 space-y-1"></div>
+                    <button onclick="approveAIGeneratedJob()" class="w-full py-2 bg-emerald-600 text-white font-heading font-bold text-xs rounded-xl">
+                        Approve & Save Job
+                    </button>
+                </div>`;
+            }
+
+            if (subtab === 'businesses') {
+                view.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <h3 class="font-heading font-bold text-sm text-slate-200">Verified Businesses</h3>
+                    <button onclick="renderAddBusinessForm()" class="px-3 py-1.5 bg-amber-500 text-slate-950 rounded-xl text-xs font-bold">
+                        + Add Business
+                    </button>
+                </div>
+                <div class="space-y-2">
+                    ${businesses.map(b => `
+                        <div class="p-3 bg-slate-800 rounded-2xl border border-slate-700 space-y-1 text-xs">
+                            <p class="font-bold text-amber-400 text-sm">${b.name}</p>
+                            <p class="text-slate-400">${b.address}</p>
+                            <p class="text-slate-400">Phone: ${b.phone} | Email: ${b.email}</p>
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
+
+            if (subtab === 'apps') {
+                view.innerHTML = `
+                <h3 class="font-heading font-bold text-sm text-slate-200">Candidate Applications Received</h3>
+                <div class="space-y-2">
+                    ${appliedJobs.length === 0 ? `
+                        <p class="text-xs text-slate-400">No applications received yet.</p>
+                    ` : appliedJobs.map(app => `
+                        <div class="p-3 bg-slate-800 rounded-2xl border border-slate-700 space-y-1 text-xs">
+                            <div class="flex justify-between font-bold text-amber-400">
+                                <span>${app.applicantName}</span>
+                                <span>${app.appliedDate}</span>
+                            </div>
+                            <p class="text-slate-200">Position: ${app.jobTitle} (${app.companyName})</p>
+                            <p class="text-slate-400">Contact: ${app.applicantEmail} • ${app.applicantPhone}</p>
+                            ${app.applicantNotes ? `<p class="text-slate-400 italic">"${app.applicantNotes}"</p>` : ''}
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
+        }
+
+
+        let pendingAIJobDraft = null;
+
+        async function generateJobWithAI() {
+            const promptInput = document.getElementById('aiPromptInput').value.trim();
+            if (!promptInput) return;
+
+            const btn = document.getElementById('aiGenerateBtn');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Gemini is formatting...</span>`;
+            btn.disabled = true;
+
+            const systemInstruction = `You are Jobsy's AI Assistant. Take the owner's rough text and format it into a structured job JSON object matching these exact fields:
+            title, category (Food & Restaurant, Retail, Animals, Outdoor, Technology), pay, schedule, days, description, experience.`;
+
+            try {
+                const response = await fetch(GEMINI_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `Format this job note: "${promptInput}"` }] }],
+                        systemInstruction: { parts: [{ text: systemInstruction }] },
+                        generationConfig: {
+                            responseMimeType: "application/json",
+                            responseSchema: {
+                                type: "OBJECT",
+                                properties: {
+                                    title: { type: "STRING" },
+                                    category: { type: "STRING" },
+                                    pay: { type: "STRING" },
+                                    schedule: { type: "STRING" },
+                                    days: { type: "STRING" },
+                                    description: { type: "STRING" },
+                                    experience: { type: "STRING" }
+                                }
+                            }
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                const jsonText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (jsonText) {
+                    const parsed = JSON.parse(jsonText);
+                    pendingAIJobDraft = {
+                        id: Date.now(),
+                        title: parsed.title || "Position Opening",
+                        businessId: businesses[0]?.id || "biz-1",
+                        businessName: businesses[0]?.name || "Sunny Scoop Ice Cream",
+                        category: parsed.category || "Food & Restaurant",
+                        categoryEmoji: "🍔",
+                        distance: "2.0 miles away",
+                        pay: parsed.pay || "$14/hr",
+                        schedule: parsed.schedule || "4 PM - 8 PM",
+                        days: parsed.days || "Weekdays",
+                        type: "Part-Time",
+                        experience: parsed.experience || "No experience required",
+                        ageReq: "15+ eligible",
+                        matchBadge: "Good Match",
+                        matchReason: "Fits student schedule & location preferences.",
+                        description: parsed.description || promptInput,
+                        published: true
+                    };
+
+                    document.getElementById('aiOutputContainer').classList.remove('hidden');
+                    document.getElementById('aiOutputContent').innerHTML = `
+                        <p><strong>Title:</strong> ${pendingAIJobDraft.title}</p>
+                        <p><strong>Category:</strong> ${pendingAIJobDraft.category}</p>
+                        <p><strong>Pay:</strong> ${pendingAIJobDraft.pay}</p>
+                        <p><strong>Schedule:</strong> ${pendingAIJobDraft.schedule} (${pendingAIJobDraft.days})</p>
+                        <p><strong>Description:</strong> ${pendingAIJobDraft.description}</p>
+                    `;
+                }
+            } catch (err) {
+                alert("Could not connect to Gemini API. Creating standard draft...");
+                pendingAIJobDraft = {
+                    id: Date.now(),
+                    title: "Part-Time Assistant",
+                    businessId: businesses[0].id,
+                    businessName: businesses[0].name,
+                    category: "Food & Restaurant",
+                    categoryEmoji: "🍔",
+                    distance: "2.0 miles away",
+                    pay: "$14/hr",
+                    schedule: "4 PM - 8 PM",
+                    days: "Mon-Fri",
+                    type: "Part-Time",
+                    experience: "Will train",
+                    ageReq: "15+ eligible",
+                    matchBadge: "Good Match",
+                    matchReason: "Matches local student preferences.",
+                    description: promptInput,
+                    published: true
+                };
+                document.getElementById('aiOutputContainer').classList.remove('hidden');
+            } finally {
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Generate Formated Listing with Gemini AI</span>`;
+                btn.disabled = false;
+            }
+        }
+
+        function approveAIGeneratedJob() {
+            if (pendingAIJobDraft) {
+                jobsDatabase.unshift(pendingAIJobDraft);
+                pendingAIJobDraft = null;
+                alert("Job published successfully!");
+                switchAdminSubtab('jobs');
+            }
+        }
+
+        function togglePublishJob(id) {
+            const job = jobsDatabase.find(j => j.id === id);
+            if (job) {
+                job.published = !job.published;
+                switchAdminSubtab('jobs');
+            }
+        }
+
+        function deleteJobAdmin(id) {
+            jobsDatabase = jobsDatabase.filter(j => j.id !== id);
+            switchAdminSubtab('jobs');
+        }
+
+        function renderAddJobForm() {
+            const view = document.getElementById('adminSubtabView');
+            view.innerHTML = `
+            <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 space-y-3">
+                <h4 class="font-heading font-bold text-amber-400 text-sm">Add New Job Listing</h4>
+                <form onsubmit="handleManualJobSubmit(event)" class="space-y-2 text-xs">
+                    <input type="text" id="manualTitle" placeholder="Job Title" required class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+                    <input type="text" id="manualPay" placeholder="Pay Rate (e.g. $14 - $16/hr)" required class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+                    <input type="text" id="manualSchedule" placeholder="Shift Schedule (e.g. 4 PM - 8 PM)" required class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+                    <textarea id="manualDesc" placeholder="Job Description" required class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-white" rows="3"></textarea>
+                    
+                    <div class="flex space-x-2 pt-2">
+                        <button type="button" onclick="switchAdminSubtab('jobs')" class="w-1/2 py-2 bg-slate-700 text-slate-300 rounded-xl">Cancel</button>
+                        <button type="submit" class="w-1/2 py-2 bg-amber-500 text-slate-950 font-bold rounded-xl">Publish Job</button>
+                    </div>
+                </form>
+            </div>`;
+        }
+
+        function handleManualJobSubmit(e) {
+            e.preventDefault();
+            const newJob = {
+                id: Date.now(),
+                title: document.getElementById('manualTitle').value,
+                businessId: businesses[0].id,
+                businessName: businesses[0].name,
+                category: "Food & Restaurant",
+                categoryEmoji: "🍔",
+                distance: "2.1 miles away",
+                pay: document.getElementById('manualPay').value,
+                schedule: document.getElementById('manualSchedule').value,
+                days: "Mon - Fri",
+                type: "Part-Time",
+                experience: "No experience required",
+                ageReq: "15+ eligible",
+                matchBadge: "Good Match",
+                matchReason: "Matches student search area.",
+                description: document.getElementById('manualDesc').value,
+                published: true
+            };
+
+            jobsDatabase.unshift(newJob);
+            switchAdminSubtab('jobs');
+        }
+
+        function renderAddBusinessForm() {
+            const view = document.getElementById('adminSubtabView');
+            view.innerHTML = `
+            <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 space-y-3">
+                <h4 class="font-heading font-bold text-amber-400 text-sm">Add Verified Business</h4>
+                <form onsubmit="handleManualBizSubmit(event)" class="space-y-2 text-xs">
+                    <input type="text" id="manualBizName" placeholder="Business Name" required class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+                    <input type="text" id="manualBizAddress" placeholder="Public Address" required class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+                    <input type="text" id="manualBizPhone" placeholder="Phone Number" required class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+                    <input type="email" id="manualBizEmail" placeholder="Contact Email" required class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
+                    
+                    <div class="flex space-x-2 pt-2">
+                        <button type="button" onclick="switchAdminSubtab('businesses')" class="w-1/2 py-2 bg-slate-700 text-slate-300 rounded-xl">Cancel</button>
+                        <button type="submit" class="w-1/2 py-2 bg-amber-500 text-slate-950 font-bold rounded-xl">Save Business</button>
+                    </div>
+                </form>
+            </div>`;
+        }
+
+        function handleManualBizSubmit(e) {
+            e.preventDefault();
+            const newBiz = {
+                id: `biz-${Date.now()}`,
+                name: document.getElementById('manualBizName').value,
+                address: document.getElementById('manualBizAddress').value,
+                phone: document.getElementById('manualBizPhone').value,
+                email: document.getElementById('manualBizEmail').value,
+                website: "https://example.com"
+            };
+            businesses.unshift(newBiz);
+            switchAdminSubtab('businesses');
+        }
+
+        window.onload = function() {
+            // Start at home screen or onboarding
+            if (!currentUser.hasCompletedOnboarding) {
+                renderOnboardingScreen();
+            } else {
+                renderHomeScreen();
+            }
+        };
+    </script>
+</body>
+</html>
